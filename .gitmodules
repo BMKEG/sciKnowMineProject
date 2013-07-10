@@ -1,0 +1,30 @@
+[submodule "bmkeg-parent"]
+	path = bmkeg-parent
+	url = https://github.com/BMKEG/bmkeg-parent
+[submodule "bmkeg-as-parent"]
+	path = bmkeg-as-parent
+	url = https://github.com/BMKEG/bmkeg-as-parent
+[submodule "lapdftext"]
+	path = lapdftext
+	url = https://github.com/BMKEG/lapdftext
+[submodule "lapdftextVpdmf"]
+	path = lapdftextVpdmf
+	url = https://github.com/BMKEG/lapdftextVpdmf
+[submodule "digitalLibraryDao"]
+	path = digitalLibraryDao
+	url = https://github.com/BMKEG/digitalLibraryDao
+[submodule "skmTriage"]
+	path = skmTriage
+	url = https://github.com/BMKEG/skmTriage
+[submodule "skmCore"]
+	path = skmCore
+	url = https://github.com/BMKEG/skmCore
+[submodule "triageServer"]
+	path = triageServer
+	url = https://github.com/BMKEG/triageServer
+[submodule "triageClientComponents"]
+	path = triageClientComponents
+	url = https://github.com/BMKEG/triageClientComponents
+[submodule "triageClientApp"]
+	path = triageClientApp
+	url = https://github.com/BMKEG/triageClientApp
