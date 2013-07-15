@@ -3,11 +3,11 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>edu.isi.bmkeg</groupId>
-	<artifactId>triageModules</artifactId>
+	<artifactId>triageProject</artifactId>
 	<version>1.1.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	
-	<name>triageModules</name>
+	<name>triageProject</name>
 
 	<!-- It dependends on the vpdmfProject submodules and the vpdmfModel 'triage' -->
     <modules>
@@ -23,6 +23,7 @@
       <module>triageServer</module>
     </modules>
 
+    <plugins>
             <plugin>
               <groupId>org.apache.maven.plugins</groupId>
               <artifactId>maven-deploy-plugin</artifactId>
@@ -31,5 +32,5 @@
                 <skip>true</skip>
               </configuration>
             </plugin>
-
+    <plugins>
 </project>
