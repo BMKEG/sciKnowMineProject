@@ -1,6 +1,3 @@
-The SciKnowMine Triage Application
-==================================
-
 We present here a user manual for running and maintaining a web-based system for peforming document
 triage given a corpus of PDF files. We will describe processes for installation, execution and maintenance 
 of the system. 
@@ -10,15 +7,14 @@ of the system.
 Pre-Installation Requirements 
 ----------------
 
-* MySQL 5.1 (http://www.mysql.com/)
-** http://dev.mysql.com/downloads/mysql/5.1.html
-* SwfTools (http://www.swftools.org/)
-** http://wiki.swftools.org/wiki/Installation
+* MySQL 5.1 (http://dev.mysql.com/downloads/mysql/5.1.html)
+* SwfTools (http://wiki.swftools.org/wiki/Installation)
 
 The Server:
   - Must own a port number to process http requests from client web browsers.
   - Must be able to send http requests to http://eutils.ncbi.nlm.nih.gov (PubMed's eCitation services).
   - Must be able to login to MySql with a user defined login with privileges to create (and destroy) databases.
+  - How to manage MySQL Users: http://dev.mysql.com/doc/mysql-security-excerpt/5.1/en/user-account-management.html
 
 Installation
 ------------
@@ -83,11 +79,6 @@ for existing user with suitable permissions.
 
 ```
 buildTriageDatabase -db <name-of-database> -l <login> -p <password>        
-
-Arguments:  -db DBNAME -l LOGIN -p PASSWD
-
- Options: 
-
  -db DBNAME : Database name
  -l LOGIN   : Database login
  -p PASSWD  : Database password
@@ -104,19 +95,14 @@ the database as a whole.
 ```
 editArticleCorpus -name "GO" -desc "Gene Ontology" -owner "Rocky" -regex "G" 
                   -db <name-of-database> -l <login> -p <password> 
-                  
-Arguments:  -db DBNAME -desc DESCRIPTION -l LOGIN -name NAME -owner OWNER -p PASSWD [-regex REGEX]
-
- Options: 
-
  -db DBNAME        : Database name
  -desc DESCRIPTION : Corpus description
  -l LOGIN          : Database login
  -name NAME        : Corpus name
  -owner OWNER      : Corpus owner
  -p PASSWD         : Database password
- -regex REGEX      : Regular expression to recognize incoming files                  
-``` 
+ -regex REGEX      : Regular expression to recognize incoming files (optional)
+```
 
 > Note that the first time you run a database command in this system, the system needs to generate a lookup object 
 for the many Journals referenced in pubmed. This is a one-time step. 
@@ -125,9 +111,7 @@ for the many Journals referenced in pubmed. This is a one-time step.
 
 The next step is to build the triage corpora that hold the articles. 
 
-A triage corpus is a special kind of corpus used to organize a collection of articles for the triaging procedure. 
-Each triage corpus should denote a natural collection of papers (such as all those papers assigned to a specific 
-individual or all papers from a given Journal). A triage corpus is the entry point for a paper in the system.
+A triage corpus is a special kind of corpus used to organize a collection of articles for the triaging procedure. Each triage corpus should denote a natural collection of papers (such as all those papers assigned to a specific individual or all papers from a given Journal). A triage corpus is the entry point for a paper in the system.
 
 The following example would create a triage corpus named 'curator1', owned by a user called 'Curator 1'. 
 
@@ -135,39 +119,32 @@ The following example would create a triage corpus named 'curator1', owned by a 
 editTriageCorpus -name "curator1" -desc "Curator 1's triage corpus" -owner "Curator 1"
                   -db <name-of-database> -l <login> -p <password> 
 
-Arguments:  -db DBNAME -desc DESCRIPTION -l LOGIN -name NAME -owner OWNER -p PASSWD
-
- Options: 
-
  -db DBNAME        : Database name
  -desc DESCRIPTION : Corpus description
  -l LOGIN          : Database login
  -name NAME        : Corpus name
  -owner OWNER      : Corpus owner
- -p PASSWD         : Database password
-                  
-``` 
+ -p PASSWD         : Database password  
+           
+```
 
 ### Loading Articles into a Triage Corpus 
  
 The crucial task of loading files into a triage corpus is performed by the following function:
 
 ```
-buildTriageCorpusFromPdfDir -pdfs </complete/path/to/pdf/directory> -corpus "<triage-corpus-name>"
-                  -db <name-of-database> -l <login> -p <password> 
-                  
-Arguments:  [-codeList CODES] -corpus CORPUS -db DBNAME -l LOGIN -p PASSWD -pdfs PDF-DIR-OR-FILE [-rules FILE]
+buildTriageCorpusFromPdfDir -pdfs </complete/path/to/pdf/directory> -corpus "<triage-corpus-name>" 
+                  -rules </path/to/rules/file> -codeList <path/to/codeList/file>
+                  -db <name-of-database> -l <login> -p <password>
 
- Options: 
-
- -codeList CODES       : Encoded files
+ -codeList CODES       : Encoded file names + codes (optional)
  -corpus CORPUS        : Corpus name
  -db DBNAME            : Database name
  -l LOGIN              : Database login
  -p PASSWD             : Database password
  -pdfs PDF-DIR-OR-FILE : Pdfs directory or file
- -rules FILE           : Rules file
-``` 
+ -rules FILE           : Rules file (optional) 
+```
 
 This will run through all files in the targeted directory and load them into the named triage corpus. Note 
 that the system will iterate over *every target corpus* and assign an in-out code to every article. The user 
@@ -249,4 +226,3 @@ Stopping the Triage Web App Server
 ----------------------------------
 
 Currently you should just kill the job that was started with the triageServer command. 
-
