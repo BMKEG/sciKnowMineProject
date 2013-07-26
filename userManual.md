@@ -1,3 +1,21 @@
+**Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
+
+- [Pre-Installation Requirements ](#pre-installation-requirements-)
+- [Installation](#installation)
+- [Organizion of the Triage System](#organizion-of-the-triage-system)
+  - [The format of PDF file names.](#the-format-of-pdf-file-names)
+- [Using the Triage System](#using-the-triage-system)
+	- [Setting up the swfTools directory](#setting-up-the-swftools-directory)
+	- [Building a triage database](#building-a-triage-database)
+	- [Creating a Target Corpora](#creating-a-target-corpora)
+	- [Creating a Target Corpora](#creating-a-target-corpora-1)
+	- [Loading Articles into a Triage Corpus](#loading-articles-into-a-triage-corpus)
+	- [Train machine learning classifiers](#train-machine-learning-classifiers)
+	- [Use classifier to assign papers to target corpora.](#use-classifier-to-assign-papers-to-target-corpora)
+- [Starting the Triage Web Application Server](#starting-the-triage-web-application-server)
+- [Accessing the Triage Web App](#accessing-the-triage-web-app)
+- [Stopping the Triage Web App Server](#stopping-the-triage-web-app-server)
+
 We present here a user manual for running and maintaining a web-based system for peforming document
 triage given a corpus of PDF files. We will describe processes for installation, execution and maintenance 
 of the system. 
