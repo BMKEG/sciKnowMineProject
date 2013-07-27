@@ -1,20 +1,3 @@
-**Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
-
-- [Pre-Installation Requirements ](#pre-installation-requirements-)
-- [Installation](#installation)
-- [Organizion of the Triage System](#organizion-of-the-triage-system)
-  - [The format of PDF file names.](#the-format-of-pdf-file-names)
-- [Using the Triage System](#using-the-triage-system)
-	- [Setting up the swfTools directory](#setting-up-the-swftools-directory)
-	- [Building a triage database](#building-a-triage-database)
-	- [Creating a Target Corpora](#creating-a-target-corpora)
-	- [Creating a Target Corpora](#creating-a-target-corpora-1)
-	- [Loading Articles into a Triage Corpus](#loading-articles-into-a-triage-corpus)
-	- [Train machine learning classifiers](#train-machine-learning-classifiers)
-	- [Use classifier to assign papers to target corpora.](#use-classifier-to-assign-papers-to-target-corpora)
-- [Starting the Triage Web Application Server](#starting-the-triage-web-application-server)
-- [Accessing the Triage Web App](#accessing-the-triage-web-app)
-- [Stopping the Triage Web App Server](#stopping-the-triage-web-app-server)
 
 We present here a user manual for running and maintaining a web-based system for peforming document
 triage given a corpus of PDF files. We will describe processes for installation, execution and maintenance 
@@ -102,9 +85,19 @@ buildTriageDatabase -db <name-of-database> -l <login> -p <password>
  -p PASSWD  : Database password
 ```
 
+### Destroying a triage database
+
+Removing a database from the system involves a similar command to the one creating it.
+
+```
+destroyTriageDatabase -db <name-of-database> -l <login> -p <password>        
+ -db DBNAME : Database name
+ -l LOGIN   : Database login
+ -p PASSWD  : Database password
+```
 ### Creating a Target Corpora 
 
-The first step to runnning the system is to build corpora that the triaged articles are being sorted into. 
+The first step to running the system is to build corpora that the triaged articles are being sorted into. 
 
 The following example would create a corpus named 'GO', owned by a user called 'Rocky' with the single letter code 'G'. 
 Each target corpus could be all papers concerned with Gene Ontology curation or all papers curated into 
@@ -125,7 +118,7 @@ editArticleCorpus -name "GO" -desc "Gene Ontology" -owner "Rocky" -regex "G"
 > Note that the first time you run a database command in this system, the system needs to generate a lookup object 
 for the many Journals referenced in pubmed. This is a one-time step. 
 
-### Creating a Target Corpora 
+### Creating a Triage Corpora 
 
 The next step is to build the triage corpora that hold the articles. 
 
@@ -174,6 +167,79 @@ upload will be assigned a code of `unassigned` for all corpora.
 
 Note also that the way that the text is extracted from the PDF files uses rule files for the `LAPDF-Text` system. 
 You may use a specified rule file here to improve performance of the text extraction if necessary.  
+
+### Reporting functions
+
+The system has three query command line functions for an administrator to query the state of the system from the command line.
+
+The *reportCorpusCounts* command returns a formatted count of the contents of each target and triage corpus.
+
+```
+reportCorpusCounts -db DBNAME -l LOGIN -p PASSWD
+
+ -db DBNAME            : Database name
+ -l LOGIN              : Database login
+ -p PASSWD             : Database password
+```
+
+The *reportTriageCorpusContents* command returns a formatted list of all the documents in a given triage corpus (relating to a defined target corpus). 
+
+```
+reportTargetCorpusContents  -db DBNAME -l LOGIN -p PASSWD -targetCorpus CNAME
+
+ -db DBNAME          : Database name
+ -l LOGIN            : Database login
+ -p PASSWD           : Database password
+ -targetCorpus CNAME : Target Corpus Name
+```
+
+The *reportTriageCorpusContents* command returns a formatted list of all the documents in a given triage corpus. 
+
+```
+reportTriageCorpusContents -db DBNAME -l LOGIN -p PASSWD -targetCorpus CNAME -triageCorpus CNAME
+
+ -db DBNAME          : Database name
+ -l LOGIN            : Database login
+ -p PASSWD           : Database password
+ -targetCorpus CNAME : Target Corpus Name
+ -triageCorpus CNAME : Triage Corpus Name
+```
+
+### Deleting data 
+
+We have three commands to edit data from the system
+
+The *deleteTargetCorpus* will remove all traces of a given target corpus from the system. 
+
+```
+deleteTriageCorpus -db DBNAME -l LOGIN -p PASSWD -targetCorpus TARGET
+
+ -db DBNAME           : Database name
+ -l LOGIN             : Database login
+ -p PASSWD            : Database password
+ -targetCorpus TARGET : Target Corpus Name
+```
+
+The *deleteTriageCorpus* will remove all traces of a given triage corpus from the system. 
+```
+deleteTriageCorpus -db DBNAME -l LOGIN -p PASSWD -targetCorpus TARGET
+
+ -db DBNAME           : Database name
+ -l LOGIN             : Database login
+ -p PASSWD            : Database password
+ -triageCorpus TRIAGE : Triage Corpus Name
+```
+
+The *deleteTriageScoresBasedOnCodefile* uses a code file (a list of formatted pmid_A.pdf file names) to remove paper's association with a given triage corpus. 
+```
+deleteTriageScoresBasedOnCodefile -codeList CODES -db DBNAME -l LOGIN -p PASSWD -triageCorpus CORPUS
+
+ -codeList CODES      : Encoded files
+ -db DBNAME           : Database name
+ -l LOGIN             : Database login
+ -p PASSWD            : Database password
+ -triageCorpus CORPUS : Triage Corpus name
+```
 
 ### Train machine learning classifiers
 
