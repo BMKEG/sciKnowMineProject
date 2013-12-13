@@ -28,3 +28,6 @@
 [submodule "triageClientApp"]
 	path = triageClientApp
 	url = https://github.com/BMKEG/triageClientApp
+[submodule "sciKnowMine"]
+	path = sciKnowMine
+	url = https://github.com/BMKEG/sciKnowMine
