@@ -31,3 +31,6 @@
 [submodule "sciKnowMine"]
 	path = sciKnowMine
 	url = https://github.com/BMKEG/sciKnowMine
+[submodule "digitalLibraryClientComponents"]
+	path = digitalLibraryClientComponents
+	url = https://github.com/BMKEG/digitalLibraryClientComponents
