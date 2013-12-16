@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Id: DesignerComponent.mxml 2500 2011-06-17 00:00:05Z tom $ 
+     $Date: 2011-06-16 17:00:05 -0700 (Thu, 16 Jun 2011) $
+     $Revision: 2500 $ -->
+<mx:Module height="100%" width="100%" 
+		   xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		   xmlns:mx="library://ns.adobe.com/flex/mx"
+		   xmlns:s="library://ns.adobe.com/flex/spark" 
+		   implements="org.robotlegs.utilities.modular.core.IModule"
+		   xmlns:view="edu.isi.bmkeg.lapdftextModule.view.*"
+		   xmlns:fp="com.devaldi.controls.flexpaper.*">
+	
+	<fx:Declarations>
+
+	</fx:Declarations>
+	
+	<fx:Script>
+    <![CDATA[
+		
+		import edu.isi.bmkeg.lapdftextModule.LapdftextModuleContext;
+		
+		import mx.core.IVisualElementContainer;
+		import mx.events.SliderEvent;
+		
+		import org.robotlegs.core.IContext;
+		import org.robotlegs.core.IInjector;
+		import org.robotlegs.utilities.modular.core.IModule;
+		import org.robotlegs.utilities.modular.core.IModuleContext;
+		
+		import mx.controls.Alert;
+		import mx.events.PropertyChangeEvent;
+		import mx.events.PropertyChangeEventKind;
+		import mx.managers.PopUpManager;
+		import mx.rpc.events.FaultEvent;
+		
+		protected var context:IModuleContext;
+
+		[Bindable]
+		private var ruleBoxHeight:int;
+
+		public function displayServiceFailureError(faultEvent:FaultEvent):void
+		{
+			Alert.show(faultEvent.toString(),"Service Error");
+		}
+		
+		//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		
+		/*private function createCorpusClickHandler(event:MouseEvent):void {
+			var openEvent:UserRequestCorpusEditorEvent = 
+				new UserRequestCorpusEditorEvent(UserRequestCorpusEditorEvent.OPEN);
+			
+			dispatchEvent(openEvent);
+		}
+		
+		private function insertArticleClickHandler(event:MouseEvent):void {
+			var openEvent:UserRequestArticleEditorEvent = 
+				new UserRequestArticleEditorEvent(UserRequestArticleEditorEvent.OPEN);
+			
+			dispatchEvent(openEvent);
+		}*/
+		
+		/**
+		 * We need to initialize our context by setting the parent
+		 * injector for the module. This is actually injected by the
+		 * shell, so no need to worry about it!
+		 */
+		[Inject]
+		public function set parentInjector(value:IInjector):void
+		{
+			context = new LapdftextModuleContext(this, value);
+		}
+		
+		public function dispose():void
+		{
+			if(parent && parent.contains(this))
+				IVisualElementContainer(parent).removeElement(this);
+			context.dispose();
+			context = null;    
+		}	
+		
+    ]]>
+    
+	</fx:Script>
+	<mx:HDividedBox width="100%" height="100%">
+		<s:Group width="50%" height="100%">
+			<s:layout>
+				<s:BasicLayout/>
+			</s:layout>
+			<view:FullTextDocumentList left="5" right="0" top="10" bottom="10" />
+		</s:Group>
+		<mx:TabNavigator width="50%" height="100%" >
+			<s:NavigatorContent label="Content" >
+				<s:Group width="100%" height="100%" >
+					<s:layout>
+						<s:VerticalLayout/>
+					</s:layout>
+					<view:RulesEditor id="rulesEditor" width="100%" height="130" />	
+					<mx:TabNavigator width="100%" height="100%" >
+						<s:NavigatorContent label="Text" >
+							<view:FTDTextView  width="100%" height="100%"/>									
+						</s:NavigatorContent>
+						<s:NavigatorContent label="Blocks" >
+							<view:FTDBlocksView  width="100%" height="100%"/>																
+						</s:NavigatorContent>					
+					</mx:TabNavigator>
+				</s:Group>									
+			</s:NavigatorContent>
+			<s:NavigatorContent label="PDF" >
+				<fp:FlexPaperViewer id="flexPaperViewer" width="100%" height="100%"/>
+			</s:NavigatorContent>
+		</mx:TabNavigator>
+	</mx:HDividedBox>
+	
+</mx:Module>

@@ -3,24 +3,27 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>edu.isi.bmkeg</groupId>
-	<artifactId>triageProject</artifactId>
-	<version>1.1.2-SNAPSHOT</version>
+	<artifactId>sciKnowMineProject</artifactId>
+	<version>1.1.5-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	
-	<name>triageProject</name>
+	<name>sciKnowMineProject</name>
 
-	<!-- It dependends on the vpdmfProject submodules and the vpdmfModel 'triage' -->
     <modules>
       <module>bmkeg-as-parent</module>
       <module>bmkeg-parent</module>
       <module>digitalLibraryDao</module>
+      <module>digitalLibraryClientComponents</module>
+      <module>digitalLibraryClientApp</module>
       <module>lapdftext</module>
       <module>lapdftextVpdmf</module>
+      <module>lapdftextClientComponents</module>
+      <module>lapdftextClientApp</module>
       <module>skmCore</module>
       <module>skmTriage</module>
       <module>triageClientApp</module>
       <module>triageClientComponents</module>
-      <module>triageServer</module>
+      <module>sciKnowMine</module>
     </modules>
 
     <build>

@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Form xmlns:fx="http://ns.adobe.com/mxml/2009"
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		xmlns:mx="library://ns.adobe.com/flex/mx" 
+		xmlns:view="edu.isi.bmkeg.digitalLibraryModule.view.*" 
+		width="100%"
+		height="100%">	
+	<s:layout>			
+		<s:FormLayout paddingTop="0" gap="-14" paddingRight="25"/>
+	</s:layout>
+
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import edu.isi.bmkeg.ftd.events.*;
+			import edu.isi.bmkeg.ftd.model.*;
+			import edu.isi.bmkeg.ftd.model.qo.*;
+			import edu.isi.bmkeg.ftd.rl.events.*;
+			import edu.isi.bmkeg.utils.SimpleUtils;
+			import edu.isi.bmkeg.vpdmf.model.instances.LightViewInstance;
+			
+			import flash.net.FileFilter;
+			import flash.net.FileReference;
+			
+			import mx.collections.ArrayCollection;
+			
+			import spark.events.IndexChangeEvent;
+			
+			[Bindable]
+			public var ruleSetList:ArrayCollection = new ArrayCollection();
+			
+			[Bindable]
+			public var ruleSet:FTDRuleSet;
+
+			[Bindable]
+			public var ftd:FTD;
+			
+			[Bindable]
+			private var ruleFile:FileReference;
+
+			//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+			// FTDRuleSet List Query Functions
+			//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+			public function ruleSetLabelFunc(item:Object):String {
+				var lvi:LightViewInstance = LightViewInstance(item);
+				
+				if( lvi == null )
+					return "-";
+				
+				return lvi.vpdmfLabel; 
+			}
+			
+			private function handle_ruleSetComboChange(event:IndexChangeEvent):void
+			{
+				
+				var i:int = event.newIndex;
+				
+				if( i >= 0 ) {
+					var o:Object = ruleSetCombo.dataProvider.getItemAt(i);
+					var lvi:LightViewInstance = LightViewInstance(o);
+					var vpdmfId:Number = lvi.vpdmfId;
+					
+					this.dispatchEvent( new FindFTDRuleSetByIdEvent(vpdmfId) );
+					
+				} 
+				
+			}
+						
+			// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+			// LOADING THE RULE FILE FROM DISK TO INTERFACE.
+			// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+			
+			private function startLoadingFile():void
+			{
+				ruleFile = new FileReference();
+				ruleFile.addEventListener(Event.SELECT, selectHandler);
+				var fileFilter:FileFilter = new FileFilter("Drools Files: (*.drl, *.csv, *.xls)", "*.drl;*.csv;*.xls");
+				ruleFile.browse([fileFilter]);
+			}
+			
+			private function selectHandler(event:Event):void
+			{
+				ruleFile.removeEventListener(Event.SELECT, selectHandler);
+								
+				ruleFile.addEventListener(Event.COMPLETE, loadCompleteHandler);
+				ruleFile.load();
+			}
+			
+			private function loadCompleteHandler(event:Event):void
+			{
+				ruleFile.removeEventListener(Event.COMPLETE, loadCompleteHandler);
+
+				var newRs:FTDRuleSet = new FTDRuleSet();
+				newRs.fileName = ruleFile.name;
+				var s:String = ruleFile.name;
+				s = s.substring(s.length-4, s.length);
+				if( s == ".drl" ) {
+					newRs.ruleBody = ruleFile.data.toString();
+				} else if( s == ".csv" || s == ".xls" ) {
+					newRs.excelRuleFile = ruleFile.data;	
+				} else {
+					return;
+				}
+				
+				//
+				// need to read the file and description from this object,
+				// but will have to do that on the server. 
+				//				
+				if( this.ftd != null ) {
+					
+					var ev:RunRuleSetEvent = new RunRuleSetEvent(this.ftd, newRs);
+					this.dispatchEvent(ev);
+				
+				} else {
+
+					var ev2:UploadRuleSetEvent = new UploadRuleSetEvent(newRs);
+					this.dispatchEvent(ev2);
+
+				}
+			
+			}
+						
+			// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+			// SAVING THE RULE FILE FROM INTERFACE TO DISK.
+			// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+			
+			private function saveFile():void {				
+				var saveFile:FileReference = new FileReference();
+				saveFile.addEventListener(Event.OPEN, saveBeginHandler);
+				saveFile.addEventListener(Event.COMPLETE, saveCompleteHandler);
+				saveFile.addEventListener(IOErrorEvent.IO_ERROR, saveIOErrorHandler);
+				saveFile.save(this.ruleFile.data);
+			}
+			
+			
+			private function saveBeginHandler(event:Event):void
+			{
+				/* IT'D BE NICE TO HAVE A PROGRESS BAR HERE*/
+			}
+			
+			private function saveCompleteHandler(event:Event):void
+			{
+				event.target.removeEventListener(Event.OPEN, saveBeginHandler);
+				event.target.removeEventListener(Event.COMPLETE, saveCompleteHandler);
+				event.target.removeEventListener(IOErrorEvent.IO_ERROR, saveIOErrorHandler);
+				
+				/* IT'D BE NICE TO HAVE A COMPLETION MESSAGE HERE*/
+			
+			}
+			
+			private function saveIOErrorHandler(event:IOErrorEvent):void
+			{
+				event.target.removeEventListener(Event.COMPLETE, saveCompleteHandler);
+				event.target.removeEventListener(IOErrorEvent.IO_ERROR, saveIOErrorHandler);
+				
+				trace("Error while trying to save:");
+				trace(event);
+			}
+			
+			// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+			// LOADING THE RULES FROM THE DATABASE.
+			// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+			private function updateRules():void
+			{
+				
+				var dotPos:int = ruleFile.name.lastIndexOf(".");
+				var s:String = ruleFile.name;
+				s = s.substr(dotPos, s.length);
+				if( s == ".drl" ) {
+					
+					this.ruleSet.ruleBody = ruleFile.data.toString();
+					
+				} else if( s == ".csv" || s == ".xls" ) {
+					
+					this.ruleSet.excelRuleFile = ruleFile.data;
+					
+				} else {
+					
+					return;
+					
+				}	
+				
+				var ev:UpdateFTDRuleSetEvent = new UpdateFTDRuleSetEvent(this.ruleSet);
+				this.dispatchEvent(ev);
+
+			}
+			
+			private function revert():void
+			{
+				var i:int = ruleSetCombo.selectedIndex;
+				
+				var o:Object = ruleSetCombo.dataProvider.getItemAt(i);
+				var lvi:LightViewInstance = LightViewInstance(o);
+				var vpdmfId:Number = lvi.vpdmfId;
+					
+				this.dispatchEvent( new FindFTDRuleSetByIdEvent(vpdmfId) );
+				
+			}
+
+			
+		]]>
+	</fx:Script>
+
+		<s:FormItem label="Use Rules" width="100%">
+			<s:Group width="100%">
+				<s:layout>
+					<s:HorizontalLayout/>
+				</s:layout>
+				<s:ComboBox id="ruleSetCombo" width="240"
+							change="handle_ruleSetComboChange(event)"
+							dataProvider="{ruleSetList}"
+							labelFunction="ruleSetLabelFunc"/>
+			</s:Group>
+		</s:FormItem>
+		
+		<s:FormHeading label="" width="100%"/>
+		<s:FormHeading label="Currently Loaded Rule Set" width="100%"/>
+		
+		<!-- Rule Set Name
+		<s:FormItem label="Name" width="100%">
+			<s:TextInput id="rsNameControl" text="{ruleSet.rsName}" width="470"/>
+		</s:FormItem> -->
+		
+		<!-- Rule Set Description
+		<s:FormItem label="Description" width="100%" >
+			<s:TextArea id="rsDescControl" width="470" text="{ruleSet.rsDescription}" heightInLines="3"/>
+		</s:FormItem>-->
+		
+		<!-- Rule Set Files-->
+		<s:FormItem label="File" width="100%">
+			<s:Group>
+				<s:layout>
+					<s:HorizontalLayout/>
+				</s:layout>
+				<s:TextInput editable="false" id="fileName" width="260" 
+							 text="{SimpleUtils.stripPathToName(ruleSet.fileName)}"/>
+				<s:Button id="uploadRsButton" label="Load From Disk" click="startLoadingFile()"/>
+				<s:Button id="downloadRsButton" label="Save To Disk" click="saveFile()"/>
+			</s:Group>
+		</s:FormItem>
+		
+	</s:Form>
+	

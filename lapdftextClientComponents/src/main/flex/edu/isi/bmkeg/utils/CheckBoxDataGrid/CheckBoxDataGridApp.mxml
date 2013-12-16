@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- $Id: CheckBoxDataGridApp.mxml 1180 2010-09-22 17:19:40Z tom $ 
+     $Date: 2010-09-22 10:19:40 -0700 (Wed, 22 Sep 2010) $
+     $Revision: 1180 $ -->
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" verticalGap="0"
+	 xmlns:local="edu.isi.bmkeg.utils.CheckBoxDataGrid.*" height="500" >
+	<mx:Script>
+	<![CDATA[
+		private var arr:Array = [
+			{ firstName: "Alex", lastName: "Harui" },
+			{ firstName: "Gordon", lastName: "Smith" },
+			{ firstName: "Deepa", lastName: "Subramanian" },
+			{ firstName: "Matt", lastName: "Chotin" },
+			{ firstName: "Ely", lastName: "Greenfield" },
+			{ firstName: "Kevin", lastName: "Lynch" },
+			{ firstName: "Shantanu", lastName: "Narayan" },
+			{ firstName: "Joan", lastName: "Lafferty" },
+			{ firstName: "Ryan", lastName: "Frishberg" },
+			{ firstName: "Jason", lastName: "Szeto" },
+			{ firstName: "Mark", lastName: "Anders" },
+			{ firstName: "Peter", lastName: "Flynn" },
+			{ firstName: "Heidi", lastName: "Williams" }
+
+		];
+
+	]]>
+	</mx:Script>
+	<local:CheckBoxDataGrid id="dg" initialize="dg.dataProvider=arr" 
+					allowMultipleSelection="true" change="foo.text = dg.selectedIndices.toString()" >
+		<local:columns>
+			<mx:DataGridColumn dataField="firstName" headerText=" " width="20" sortable="false"
+					 itemRenderer="edu.isi.bmkeg.utils.CheckBoxDataGrid.CheckBoxRenderer" > 
+			</mx:DataGridColumn>
+			<mx:DataGridColumn dataField="firstName" headerText="First Name" />
+			<mx:DataGridColumn dataField="lastName" headerText="Last Name" />
+		</local:columns>
+	</local:CheckBoxDataGrid>
+	<mx:Label id="foo" />
+
+	<local:CheckBoxList id="list" initialize="list.dataProvider=arr" labelField="lastName"
+				itemRenderer="edu.isi.bmkeg.utils.CheckBoxDataGrid.CheckBoxRenderer" 
+				allowMultipleSelection="true" change="bar.text = list.selectedIndices.toString()" >
+
+	</local:CheckBoxList>
+	<mx:Label id="bar" />
+</mx:Application>
