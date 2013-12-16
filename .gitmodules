@@ -31,3 +31,9 @@
 [submodule "digitalLibraryClientComponents"]
 	path = digitalLibraryClientComponents
 	url = https://github.com/BMKEG/digitalLibraryClientComponents
+[submodule "lapdftextClientComponents"]
+	path = lapdftextClientComponents
+	url = https://github.com/BMKEG/lapdftextClientComponents
+[submodule "sciKnowMineSystem"]
+	path = sciKnowMineSystem
+	url = https://github.com/BMKEG/sciKnowMineSystem
