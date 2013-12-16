@@ -25,9 +25,6 @@
 [submodule "triageClientComponents"]
 	path = triageClientComponents
 	url = https://github.com/BMKEG/triageClientComponents
-[submodule "triageClientApp"]
-	path = triageClientApp
-	url = https://github.com/BMKEG/triageClientApp
 [submodule "sciKnowMine"]
 	path = sciKnowMine
 	url = https://github.com/BMKEG/sciKnowMine
