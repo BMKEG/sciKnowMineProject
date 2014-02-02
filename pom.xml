@@ -14,16 +14,14 @@
       <module>bmkeg-parent</module>
       <module>digitalLibraryDao</module>
       <module>digitalLibraryClientComponents</module>
-      <module>digitalLibraryClientApp</module>
       <module>lapdftext</module>
       <module>lapdftextVpdmf</module>
       <module>lapdftextClientComponents</module>
-      <module>lapdftextClientApp</module>
       <module>skmCore</module>
       <module>skmTriage</module>
-      <module>triageClientApp</module>
-      <module>triageClientComponents</module>
       <module>sciKnowMine</module>
+      <module>sciKnowMineSystem</module>
+      <module>triageClientComponents</module>
     </modules>
 
     <build>

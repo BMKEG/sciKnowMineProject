@@ -37,3 +37,21 @@
 [submodule "sciKnowMineSystem"]
 	path = sciKnowMineSystem
 	url = https://github.com/BMKEG/sciKnowMineSystem
+[submodule "vpdmf-people"]
+	path = vpdmf-people
+	url = https://github.com/BMKEG/vpdmf-people
+[submodule "vpdmf-terminology"]
+	path = vpdmf-terminology
+	url = https://github.com/BMKEG/vpdmf-terminology
+[submodule "vpdmf-triage"]
+	path = vpdmf-triage
+	url = https://github.com/BMKEG/vpdmf-triage
+[submodule "vpdmf-parent"]
+	path = vpdmf-parent
+	url = https://github.com/BMKEG/vpdmf-parent
+[submodule "vpdmf-ftd"]
+	path = vpdmf-ftd
+	url = https://github.com/BMKEG/vpdmf-ftd
+[submodule "vpdmf-digitalLibrary"]
+	path = vpdmf-digitalLibrary
+	url = https://github.com/BMKEG/vpdmf-digitalLibrary
